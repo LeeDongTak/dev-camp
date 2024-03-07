@@ -2,16 +2,15 @@ import { Button } from '@/components/ui/button';
 import { z } from 'zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useForm } from 'react-hook-form';
+import { FieldValues, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { FaArrowRight } from 'react-icons/fa';
+import { fromType } from '@/types/types';
 
-const FirstForm = () => {
-  const form = useForm();
-
+const FirstForm = ({ form }: fromType) => {
   return (
     <>
       {/* 이름 */}
@@ -31,7 +30,7 @@ const FirstForm = () => {
       {/* 이메일 */}
       <FormField
         control={form.control}
-        name="username"
+        name="email"
         render={({ field }) => (
           <FormItem>
             <FormLabel>이메일</FormLabel>
@@ -45,7 +44,7 @@ const FirstForm = () => {
       {/* 연락처 */}
       <FormField
         control={form.control}
-        name="username"
+        name="phone"
         render={({ field }) => (
           <FormItem>
             <FormLabel>연락처</FormLabel>
@@ -59,7 +58,7 @@ const FirstForm = () => {
       {/* 역할 */}
       <FormField
         control={form.control}
-        name="email"
+        name="role"
         render={({ field }) => (
           <FormItem>
             <FormLabel>역할</FormLabel>

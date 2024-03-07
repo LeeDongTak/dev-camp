@@ -10,18 +10,24 @@ import { FaArrowRight, FaArrowLeft } from 'react-icons/fa';
 import FirstForm from '@/components/FirstForm';
 import LastForm from '@/components/LastForm';
 import { useState } from 'react';
+import { authRegisterSchema } from '@/validation/isValidAuth';
+import { RegisterInput, fromType } from '@/types/types';
 
 const inter = Inter({ subsets: ['latin'] });
 
-const formSchema = z.object({
-  username: z.string().min(2, {
-    message: 'Username must be at least 2 characters.',
-  }),
-});
-
 export default function Home() {
-  const [isForm, setIsForm] = useState(true);
-  const form = useForm();
+  const [isFormPage, setIsFormPage] = useState(true);
+  const form = useForm<RegisterInput>({
+    resolver: zodResolver(authRegisterSchema),
+    defaultValues: {
+      phone: '',
+      email: '',
+      role: '',
+      username: '',
+      password: '',
+      passwordConfirm: '',
+    },
+  });
 
   const onSubmit = () => {
     console.log('asdf');
@@ -36,13 +42,23 @@ export default function Home() {
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            {isForm ? <FirstForm /> : <LastForm />}
-            {isForm ? (
+            {isFormPage ? <FirstForm form={form} /> : <LastForm form={form} />}
+            {isFormPage ? (
               <Button
                 type="button"
                 className={cn('gap-2')}
                 onClick={() => {
-                  setIsForm(!isForm);
+                  form.trigger(['email', 'phone', 'username', 'role']);
+                  const email = form.getFieldState('email');
+                  const phone = form.getFieldState('phone');
+                  const username = form.getFieldState('username');
+                  const role = form.getFieldState('role');
+
+                  if (email.isDirty || email.invalid) return;
+                  if (phone.isDirty || phone.invalid) return;
+                  if (username.isDirty || username.invalid) return;
+                  if (role.isDirty || role.invalid) return;
+                  setIsFormPage(!isFormPage);
                 }}
               >
                 <span>다음단계로</span>
@@ -57,7 +73,7 @@ export default function Home() {
                   type="button"
                   className={cn('gap-2 ml-5 bg-[none] text-[#000] shadow-none hover:bg-[none]')}
                   onClick={() => {
-                    setIsForm(!isForm);
+                    setIsFormPage(!isFormPage);
                   }}
                 >
                   <FaArrowLeft />
