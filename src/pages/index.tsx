@@ -11,13 +11,13 @@ import FirstForm from '@/components/FirstForm';
 import LastForm from '@/components/LastForm';
 import { useState } from 'react';
 import { authRegisterSchema } from '@/validation/isValidAuth';
-import { RegisterInput, fromType } from '@/types/types';
+import { valueType, fromType } from '@/types/types';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export default function Home() {
   const [isFormPage, setIsFormPage] = useState(true);
-  const form = useForm<RegisterInput>({
+  const form = useForm<valueType>({
     resolver: zodResolver(authRegisterSchema),
     defaultValues: {
       phone: '',
@@ -54,10 +54,10 @@ export default function Home() {
                   const username = form.getFieldState('username');
                   const role = form.getFieldState('role');
 
-                  if (email.isDirty || email.invalid) return;
-                  if (phone.isDirty || phone.invalid) return;
-                  if (username.isDirty || username.invalid) return;
-                  if (role.isDirty || role.invalid) return;
+                  if (!email.isDirty || email.invalid) return;
+                  if (!phone.isDirty || phone.invalid) return;
+                  if (!username.isDirty || username.invalid) return;
+                  if (!role.isDirty || role.invalid) return;
                   setIsFormPage(!isFormPage);
                 }}
               >
