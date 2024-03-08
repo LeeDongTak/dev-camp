@@ -9,14 +9,16 @@ import { cn } from '@/lib/utils';
 import { FaArrowRight, FaArrowLeft } from 'react-icons/fa';
 import FirstForm from '@/components/FirstForm';
 import LastForm from '@/components/LastForm';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { authRegisterSchema } from '@/validation/isValidAuth';
 import { valueType, fromType } from '@/types/types';
+import { useToast } from '@/components/ui/use-toast';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export default function Home() {
   const [isFormPage, setIsFormPage] = useState(true);
+  const { toast } = useToast();
   const form = useForm<valueType>({
     resolver: zodResolver(authRegisterSchema),
     defaultValues: {
@@ -29,8 +31,20 @@ export default function Home() {
     },
   });
 
-  const onSubmit = () => {
-    console.log('asdf');
+  const onSubmit = (data: valueType) => {
+    const { password, passwordConfirm } = data;
+    if (password !== passwordConfirm) {
+      toast({
+        title: '비밀번호가 일치하지 않습니다.',
+        variant: 'destructive',
+        duration: 1000,
+      });
+    } else {
+      alert(`      휴대폰 번호: ${data.phone}
+      이메일: ${data.email}
+      역할: ${data.role}
+      이름: ${data.username}`);
+    }
   };
 
   return (
@@ -66,7 +80,7 @@ export default function Home() {
               </Button>
             ) : (
               <>
-                <Button type="button">
+                <Button type="submit">
                   <span>계정 등록하기</span>
                 </Button>
                 <Button
